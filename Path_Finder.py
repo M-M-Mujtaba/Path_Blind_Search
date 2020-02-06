@@ -27,6 +27,10 @@ def file_input(file_name):
 
     return start_state, goal_cord
 
+def successors(curr_state):
+    curr_coord = curr_state.Coord
+
+
 
 def main():
     global dimensions
