@@ -27,22 +27,23 @@ def file_input(file_name):
         file_data = f.read()
 
     file_lines = file_data.split("\n")
-    dimensions = [int(i) for i in file_lines[0].split(" ")]
-    start_cord = [int(i) for i in file_lines[1].split(" ")]
 
-    start_state = State(start_cord, start_cord)
+    dimensions = [int(i) for i in file_lines[0].split(" ")]  # first thing is the dimension of the grid
+
+    start_cord = [int(i) for i in file_lines[1].split(" ")]  # second is the starting coords
+    start_state = State(start_cord, start_cord)  # setting the start state with start cood as parent and
+    # current
 
     goal_cord = [int(i) for i in file_lines[2].split(" ")]
     goal_state = State([], goal_cord)
+
     rows = dimensions[0]
     cols = dimensions[1]
-    grid = np.zeros((rows, cols), int)
+    grid = np.zeros((rows, cols), int)  # initializing the grid
     for i in range(3, len(file_lines) - 2):
         grid[i - 3] = [int(j) for j in file_lines[i].split(" ")]
 
     return start_state, goal_state
-
-
 
 
 def successors(state):
@@ -50,7 +51,7 @@ def successors(state):
     global right
     global up
     global di
-    end = False
+    end = False         # True when we reach the upper right corner (no where to go now )
     coord = state.Current
 
     if coord[0] < dimensions[0] - 1 and coord[1] < dimensions[1] - 1:
@@ -70,11 +71,12 @@ def successors(state):
 
     return States, end
 
+
 def main():
     global dimensions
     global grid
 
-    start_state, goal_cord = file_input('grid.txt')
+    start_state, goal_state = file_input('grid.txt')
     print(grid)
 
 
