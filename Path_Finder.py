@@ -1,7 +1,8 @@
 import numpy as np
 from dataclasses import dataclass
 import operator
-import watson_text_talker
+
+
 
 
 @dataclass
@@ -60,9 +61,9 @@ def successors(state):
     coord = state.Current
 
     if coord[0] < dimensions[0] - 1 and coord[1] < dimensions[1] - 1:
-        right_state = State(state.Current, list(map(operator.add, right, state.Current)), state.cost + 1)
-        up_state = State(state.Current, list(map(operator.add, up, state.Current)), state.cost + 1)
-        di_state = State(state.Current, list(map(operator.add, di, state.Current)), state.cost + 2)
+        right_state = State(state.Current, list(map(operator.add, right, state.Current)), state.cost + 2)
+        up_state = State(state.Current, list(map(operator.add, up, state.Current)), state.cost + 2)
+        di_state = State(state.Current, list(map(operator.add, di, state.Current)), state.cost + 3)
 
         States.append(right_state)
         States.append(up_state)
@@ -70,9 +71,9 @@ def successors(state):
     elif coord[0] == dimensions[0] - 1 and coord[1] == dimensions[1] - 1:
          end = True
     elif coord[0] == dimensions[0] - 1:
-        States.append(State(state.Current, list(map(operator.add, right, state.Current)), state.cost + 1))
+        States.append(State(state.Current, list(map(operator.add, right, state.Current)), state.cost + 2))
     elif coord[1] == dimensions[1] - 1:
-        States.append(State(state.Current, list(map(operator.add, up, state.Current)), state.cost + 1))
+        States.append(State(state.Current, list(map(operator.add, up, state.Current)), state.cost + 2))
 
     return States
 
@@ -91,7 +92,8 @@ def generate_path(start_state, goal_state):
 def print_path(start_state, goal_state):
     global grid
     global state_grid
-    global min_cost = goal_state.cost ? goal_state < min_cost
+    global min_cost
+    min_cost = goal_state.cost if goal_state.cost < min_cost else min_cost
 
     path = generate_path(start_state, goal_state)
     print(state_grid[goal_state.Current[0]][goal_state.Current[1]])
@@ -133,6 +135,27 @@ def bfs(start_state, goal_state):
     return found
 
 
+def dfs(start_state, goal_state):
+    global grid
+    global state_grid
+    found = False
+    path = []
+    visited = grid.copy()
+    path.append(start_state)
+    while len(path) > 0:
+        check_state = path.pop() #using list as a stack
+        state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
+        if check_state == goal_state:
+            found = True
+            print(state_grid)
+            print_path(start_state, check_state)
+        visited[check_state.Current[0]][check_state.Current[1]] = 2
+        for state in successors(check_state):
+            if visited[state.Current[0]][state.Current[1]] < 1:
+                path.append(state)
+    return found
+
+
 def main():
     global dimensions
     global grid
@@ -141,6 +164,8 @@ def main():
     print(start_state)
     print(goal_state)
     if not bfs(start_state, goal_state):
+        print("No path found")
+    if not dfs(start_state, goal_state):
         print("No path found")
 
     print(grid)
