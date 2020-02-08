@@ -155,6 +155,46 @@ def dfs(start_state, goal_state):
                 path.append(state)
     return found
 
+def dfs_level(start_state, goal_state, level, x):
+    global grid
+    global state_grid
+    found = False
+    path = []
+    visited = grid.copy()
+    path.append(start_state)
+    while len(path) > 0:
+        check_state = path.pop() #using list as a stack
+        state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
+        if check_state == goal_state:
+            found = True
+            print(state_grid)
+            print_path(start_state, check_state)
+        visited[check_state.Current[0]][check_state.Current[1]] = 2
+
+        if level > 0: #if there are levels to check
+            level=level-1   #remaining levels to check
+            for state in successors(check_state):
+                if visited[state.Current[0]][state.Current[1]] < 1:
+                    path.append(state)
+
+    if level > 0:   #if there were more levels given and the depth in reality was less
+        x[0]= 1
+    return found
+
+def iterativedeeping(start_state,goal_state):
+    value =[0]
+    flag=True
+    level =0
+    while flag:
+        if dfs_level(start_state, goal_state,level, value):
+            return True
+        if value[0]==1:   #total depth has been checked
+            return False
+        level=level+1     #increase level of depth by 1
+    return False
+
+
+
 
 def main():
     global dimensions
@@ -163,11 +203,12 @@ def main():
     start_state, goal_state = file_input('grid.txt')
     print(start_state)
     print(goal_state)
-    if not bfs(start_state, goal_state):
+    #if not bfs(start_state, goal_state):
+     #   print("No path found")
+    #if not dfs(start_state, goal_state):
+     #   print("No path found")
+    if not iterativedeeping(start_state, goal_state):
         print("No path found")
-    if not dfs(start_state, goal_state):
-        print("No path found")
-
     print(grid)
 
 
