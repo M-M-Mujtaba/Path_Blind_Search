@@ -78,8 +78,10 @@ def successors(state):
 def generate_path(start_state, goal_state):
     path = []
     global state_grid
-
-
+    cur_state = state_grid[goal_state.Parent[0]][goal_state.Parent[1]]
+    while not( cur_state == start_state):
+        path.append(cur_state)
+        cur_state = state_grid[cur_state.Parent[0]][cur_state.Parent[1]]
 
     return path
 
@@ -117,7 +119,7 @@ def bfs(start_state, goal_state):
         if check_state == goal_state:
             found = True
             print(state_grid)
-            print_path(path, start_state, goal_state)
+            print_path(start_state, check_state)
         visited[check_state.Current[0]][check_state.Current[1]] = 2
         for state in successors(check_state):
             if visited[state.Current[0]][state.Current[1]] < 1:
