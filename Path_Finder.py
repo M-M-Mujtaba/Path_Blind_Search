@@ -8,6 +8,7 @@ import watson_text_talker
 class State:
     Parent: []
     Current: []
+    cost: int
 
     def __eq__(self, other):
         return self.Current == other.Current
@@ -16,6 +17,7 @@ class State:
 # Global variables
 dimensions = []
 grid = None  # 2d array of all the information about the map
+state_grid = None
 right = [0, 1]
 up = [1, 0]
 di = [1, 1]
@@ -24,19 +26,20 @@ di = [1, 1]
 def file_input(file_name):
     global dimensions
     global grid
+    global state_grid
     with open(file_name, 'r') as f:
         file_data = f.read()
 
     file_lines = file_data.split("\n")
 
     dimensions = [int(i) for i in file_lines[0].split(" ")]  # first thing is the dimension of the grid
-
+    state_grid = [[State([], [i, j], 0) for j in range(dimensions[1])] for i in range(dimensions[0])]
     start_cord = [int(i) for i in file_lines[1].split(" ")]  # second is the starting coords
-    start_state = State(start_cord, start_cord)  # setting the start state with start cood as parent and
+    start_state = State(start_cord, start_cord, 0)  # setting the start state with start cood as parent and
     # current
 
     goal_cord = [int(i) for i in file_lines[2].split(" ")]
-    goal_state = State([], goal_cord)
+    goal_state = State([], goal_cord, 0)
 
     rows = dimensions[0]
     cols = dimensions[1]
@@ -56,9 +59,9 @@ def successors(state):
     coord = state.Current
 
     if coord[0] < dimensions[0] - 1 and coord[1] < dimensions[1] - 1:
-        right_state = State(state.Current, list(map(operator.add, right, state.Current)))
-        up_state = State(state.Current, list(map(operator.add, up, state.Current)))
-        di_state = State(state.Current, list(map(operator.add, di, state.Current)))
+        right_state = State(state.Current, list(map(operator.add, right, state.Current)), state.cost+ 1)
+        up_state = State(state.Current, list(map(operator.add, up, state.Current)), state.cost+ 1)
+        di_state = State(state.Current, list(map(operator.add, di, state.Current)), state.cost + 2)
 
         States.append(right_state)
         States.append(up_state)
@@ -72,17 +75,27 @@ def successors(state):
 
     return States
 
+def generate_path(start_state, goal_state):
+    path = []
+    global state_grid
 
-def print_path(path, start_state, goal_state):
+
+
+    return path
+
+def print_path( start_state, goal_state):
     global grid
+    global state_grid
+    path = generate_path(start_state, goal_state)
+    print(state_grid[goal_state.Current[0]][goal_state.Current[1]])
 
     for i in range(dimensions[0]):
         for j in range(dimensions[1]):
-            if State([], [i, j]) == start_state:
+            if State([], [i, j], 0) == start_state:
                 print('S', end=" ")
-            elif State([], [i, j]) == goal_state:
+            elif State([], [i, j], 0) == goal_state:
                 print('G', end=" ")
-            elif State([], [i, j]) in path:
+            elif State([], [i, j], 0) in path:
                 print('*', end=" ")
             else:
                 print(grid[i][j], end=" ")
@@ -93,14 +106,17 @@ def print_path(path, start_state, goal_state):
 
 def bfs(start_state, goal_state):
     global grid
+    global state_grid
     found = False
     path = []
     visited = grid.copy()
     path.append(start_state)
     while len(path) > 0:
         check_state = path.pop(0)
+        state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
         if check_state == goal_state:
             found = True
+            print(state_grid)
             print_path(path, start_state, goal_state)
         visited[check_state.Current[0]][check_state.Current[1]] = 2
         for state in successors(check_state):
