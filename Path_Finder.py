@@ -21,6 +21,7 @@ state_grid = None
 right = [0, 1]
 up = [1, 0]
 di = [1, 1]
+min_cost = 0
 
 
 def file_input(file_name):
@@ -55,42 +56,46 @@ def successors(state):
     global right
     global up
     global di
-    # end = False  # True when we reach the upper right corner (no where to go now )
+    end = False  # True when we reach the upper right corner (no where to go now )
     coord = state.Current
 
     if coord[0] < dimensions[0] - 1 and coord[1] < dimensions[1] - 1:
-        right_state = State(state.Current, list(map(operator.add, right, state.Current)), state.cost+ 1)
-        up_state = State(state.Current, list(map(operator.add, up, state.Current)), state.cost+ 1)
+        right_state = State(state.Current, list(map(operator.add, right, state.Current)), state.cost + 1)
+        up_state = State(state.Current, list(map(operator.add, up, state.Current)), state.cost + 1)
         di_state = State(state.Current, list(map(operator.add, di, state.Current)), state.cost + 2)
 
         States.append(right_state)
         States.append(up_state)
         States.append(di_state)
-    # elif coord[0] == dimensions[0] - 1 and coord[1] == dimensions[1] - 1:
-    # end = True
-    elif coord[0] == dimensions[0] - 2:
-        States.append(State(state.Current, list(map(operator.add, right, state.Current))))
-    elif coord[1] == dimensions[1] - 2:
-        States.append(State(state.Current, list(map(operator.add, up, state.Current))))
+    elif coord[0] == dimensions[0] - 1 and coord[1] == dimensions[1] - 1:
+         end = True
+    elif coord[0] == dimensions[0] - 1:
+        States.append(State(state.Current, list(map(operator.add, right, state.Current)), state.cost + 1))
+    elif coord[1] == dimensions[1] - 1:
+        States.append(State(state.Current, list(map(operator.add, up, state.Current)), state.cost + 1))
 
     return States
+
 
 def generate_path(start_state, goal_state):
     path = []
     global state_grid
     cur_state = state_grid[goal_state.Parent[0]][goal_state.Parent[1]]
-    while not( cur_state == start_state):
+    while not (cur_state == start_state):
         path.append(cur_state)
         cur_state = state_grid[cur_state.Parent[0]][cur_state.Parent[1]]
 
     return path
 
-def print_path( start_state, goal_state):
+
+def print_path(start_state, goal_state):
     global grid
     global state_grid
+    global min_cost = goal_state.cost ? goal_state < min_cost
+
     path = generate_path(start_state, goal_state)
     print(state_grid[goal_state.Current[0]][goal_state.Current[1]])
-
+    print("The cost of this path is {}".format(goal_state.cost))
     for i in range(dimensions[0]):
         for j in range(dimensions[1]):
             if State([], [i, j], 0) == start_state:
