@@ -3,8 +3,6 @@ from dataclasses import dataclass
 import operator
 
 
-
-
 @dataclass
 class State:
     Parent: []
@@ -25,6 +23,12 @@ di = [1, 1]
 min_cost = 100000
 
 
+def initialize_state_grid():
+    global state_grid
+    global dimensions
+    state_grid = [[State([], [i, j], 0) for j in range(dimensions[1])] for i in range(dimensions[0])]
+
+
 def file_input(file_name):
     global dimensions
     global grid
@@ -35,7 +39,7 @@ def file_input(file_name):
     file_lines = file_data.split("\n")
 
     dimensions = [int(i) for i in file_lines[0].split(" ")]  # first thing is the dimension of the grid
-    state_grid = [[State([], [i, j], 0) for j in range(dimensions[1])] for i in range(dimensions[0])]
+    initialize_state_grid()
     start_cord = [int(i) for i in file_lines[1].split(" ")]  # second is the starting coords
     start_state = State(start_cord, start_cord, 0)  # setting the start state with start cood as parent and
     # current
@@ -69,7 +73,7 @@ def successors(state):
         States.append(up_state)
         States.append(di_state)
     elif coord[0] == dimensions[0] - 1 and coord[1] == dimensions[1] - 1:
-         end = True
+        end = True
     elif coord[0] == dimensions[0] - 1:
         States.append(State(state.Current, list(map(operator.add, right, state.Current)), state.cost + 2))
     elif coord[1] == dimensions[1] - 1:
@@ -144,7 +148,7 @@ def dfs(start_state, goal_state):
     visited = grid.copy()
     path.append(start_state)
     while len(path) > 0:
-        check_state = path.pop() #using list as a stack
+        check_state = path.pop()  # using list as a stack
         state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
         if check_state == goal_state:
             found = True
@@ -165,7 +169,7 @@ def dfs_level(start_state, goal_state, level, x):
     visited = grid.copy()
     path.append(start_state)
     while len(path) > 0:
-        check_state = path.pop() #using list as a stack
+        check_state = path.pop()  # using list as a stack
         state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
         if check_state == goal_state:
             found = True
@@ -173,27 +177,29 @@ def dfs_level(start_state, goal_state, level, x):
             print_path(start_state, check_state)
         visited[check_state.Current[0]][check_state.Current[1]] = 2
 
-        if level > 0: #if there are levels to check
-            level=level-1   #remaining levels to check
+        if level > 0:  # if there are levels to check
+            level = level - 1  # remaining levels to check
             for state in successors(check_state):
                 if visited[state.Current[0]][state.Current[1]] < 1:
                     path.append(state)
 
-    if level > 0:   #if there were more levels given and the depth in reality was less
-        x[0]= 1
+    if level > 0:  # if there were more levels given and the depth in reality was less
+        x[0] = 1
     return found
 
-def iterativedeeping(start_state,goal_state):
-    value =[0]
-    flag=True
-    level =0
+
+def iterativedeeping(start_state, goal_state):
+    value = [0]
+    flag = True
+    level = 0
     while flag:
-        if dfs_level(start_state, goal_state,level, value):
+        if dfs_level(start_state, goal_state, level, value):
             return True
-        if value[0]==1:   #total depth has been checked
+        if value[0] == 1:  # total depth has been checked
             return False
-        level=level+1     #increase level of depth by 1
+        level = level + 1  # increase level of depth by 1
     return False
+
 
 def main():
     global dimensions
@@ -204,6 +210,7 @@ def main():
     print(goal_state)
     if not bfs(start_state, goal_state):
         print("No path found")
+    initialize_state_grid()
     if not dfs(start_state, goal_state):
         print("No path found")
 
