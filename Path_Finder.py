@@ -186,8 +186,17 @@ def dfs_level(start_state, goal_state, total_levels, max_level):
 def iterativedeeping(start_state, goal_state):
     max_level = [0]
     flag = True
-    total_level = 12
-    return dfs_level(start_state, goal_state, total_level, max_level)
+    total_level = 0
+    found= False
+    while flag:
+        found = dfs_level(start_state, goal_state, total_level, max_level)
+        if found:
+            return True
+        if max_level[0] < total_level: # number of levels traversed are less than the total assigned levels
+            return False
+        total_level = total_level + 1
+        print("total level", total_level)  #just for the sake of showing that all levels are traversed
+    return False
 
 
 def main():
