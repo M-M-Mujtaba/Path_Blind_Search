@@ -141,6 +141,8 @@ def bfs(start_state, goal_state):
     return found
 
 
+#simple dfs that traverses the entire grid
+#if a path is found to the goal state then it returns True otherwise False
 def dfs(start_state, goal_state):
     global grid
     global state_grid
@@ -161,6 +163,9 @@ def dfs(start_state, goal_state):
                 path.append(state)
     return found
 
+
+# max_level stores the maximum depth of the node, total_levels is the number of levels it will traverse
+# returns True if path found otherwise False
 def dfs_level(start_state, goal_state, total_levels, max_level):
     global grid
     global state_grid
@@ -177,17 +182,18 @@ def dfs_level(start_state, goal_state, total_levels, max_level):
             print_path(start_state, check_state)
         visited[check_state.Current[0]][check_state.Current[1]] = 2
         for state in successors(check_state):
-            if visited[state.Current[0]][state.Current[1]] < 1 and state.depth <= total_levels:
-                if state.depth > max_level[0]:
+            if visited[state.Current[0]][state.Current[1]] < 1 and state.depth <= total_levels: #if depth is in range
+                if state.depth > max_level[0]: #storing the maximum depth in max_level
                     max_level[0] = state.depth
                 path.append(state)
     return found
 
-def iterativedeeping(start_state, goal_state):
+
+# returns True if path found otherwise False
+def iterativedeepening(start_state, goal_state):
     max_level = [0]
     flag = True
     total_level = 0
-    found= False
     while flag:
         found = dfs_level(start_state, goal_state, total_level, max_level)
         if found:
@@ -212,7 +218,7 @@ def main():
     #if not dfs(start_state, goal_state):
     #    print("No path found")
     print(grid)
-    if not iterativedeeping(start_state, goal_state): #just checking for a single level right now
+    if not iterativedeepening(start_state, goal_state):
         print("No path found")
 
 if __name__ == "__main__":
