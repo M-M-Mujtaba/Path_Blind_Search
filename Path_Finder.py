@@ -22,7 +22,7 @@ state_grid = None
 right = [0, 1]
 up = [1, 0]
 di = [1, 1]
-min_cost = 0
+min_cost = 100000
 
 
 def file_input(file_name):
@@ -122,7 +122,8 @@ def bfs(start_state, goal_state):
     path.append(start_state)
     while len(path) > 0:
         check_state = path.pop(0)
-        state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
+        if not state_grid[check_state.Current[0]][check_state.Current[1]].Parrent:
+            state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
         if check_state == goal_state:
             found = True
             print(state_grid)
