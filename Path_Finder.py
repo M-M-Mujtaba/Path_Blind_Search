@@ -1,7 +1,8 @@
 import numpy as np
 from dataclasses import dataclass
 import operator
-import watson_text_talker
+
+
 
 
 @dataclass
@@ -21,7 +22,7 @@ state_grid = None
 right = [0, 1]
 up = [1, 0]
 di = [1, 1]
-min_cost = 10000000
+min_cost = 0
 
 
 def file_input(file_name):
@@ -70,9 +71,9 @@ def successors(state):
     elif coord[0] == dimensions[0] - 1 and coord[1] == dimensions[1] - 1:
          end = True
     elif coord[0] == dimensions[0] - 1:
-        States.append(State(state.Current, list(map(operator.add, right, state.Current)), state.cost + 1))
+        States.append(State(state.Current, list(map(operator.add, right, state.Current)), state.cost + 2))
     elif coord[1] == dimensions[1] - 1:
-        States.append(State(state.Current, list(map(operator.add, up, state.Current)), state.cost + 1))
+        States.append(State(state.Current, list(map(operator.add, up, state.Current)), state.cost + 2))
 
     return States
 
@@ -93,6 +94,7 @@ def print_path(start_state, goal_state):
     global state_grid
     global min_cost
     min_cost = goal_state.cost if goal_state.cost < min_cost else min_cost
+
     path = generate_path(start_state, goal_state)
     print(state_grid[goal_state.Current[0]][goal_state.Current[1]])
     print("The cost of this path is {}".format(goal_state.cost))
@@ -133,6 +135,27 @@ def bfs(start_state, goal_state):
     return found
 
 
+def dfs(start_state, goal_state):
+    global grid
+    global state_grid
+    found = False
+    path = []
+    visited = grid.copy()
+    path.append(start_state)
+    while len(path) > 0:
+        check_state = path.pop() #using list as a stack
+        state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
+        if check_state == goal_state:
+            found = True
+            print(state_grid)
+            print_path(start_state, check_state)
+        visited[check_state.Current[0]][check_state.Current[1]] = 2
+        for state in successors(check_state):
+            if visited[state.Current[0]][state.Current[1]] < 1:
+                path.append(state)
+    return found
+
+
 def main():
     global dimensions
     global grid
@@ -142,8 +165,10 @@ def main():
     print(goal_state)
     if not bfs(start_state, goal_state):
         print("No path found")
+    if not dfs(start_state, goal_state):
+        print("No path found")
 
-    print(min_cost)
+    print(grid)
 
 
 if __name__ == "__main__":
