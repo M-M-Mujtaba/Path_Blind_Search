@@ -102,7 +102,7 @@ def print_path(start_state, goal_state):
     path = generate_path(start_state, goal_state)
     print(state_grid[goal_state.Current[0]][goal_state.Current[1]])
     print("The cost of this path is {}".format(goal_state.cost))
-    for i in range(dimensions[0]):
+    for i in range( dimensions[0] - 1, -1, -1):
         for j in range(dimensions[1]):
             if State([], [i, j], 0) == start_state:
                 print('S', end=" ")
@@ -208,8 +208,8 @@ def main():
     start_state, goal_state = file_input('grid.txt')
     print(start_state)
     print(goal_state)
-    if not bfs(start_state, goal_state):
-        print("No path found")
+    # if not bfs(start_state, goal_state):
+    #     print("No path found")
     initialize_state_grid()
     if not dfs(start_state, goal_state):
         print("No path found")
