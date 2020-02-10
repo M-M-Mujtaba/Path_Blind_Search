@@ -228,7 +228,7 @@ def main():
 
     global grid
 
-    start_state, goal_state = file_input('grid.txt')
+    start_state, goal_state = file_input('test1')
     print(start_state)
     print(goal_state)
 
