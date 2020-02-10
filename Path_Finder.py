@@ -139,7 +139,7 @@ def bfs(start_state, goal_state):
     path = []
     visited = grid.copy() # don't want to modify the ordinal grid because it will be used in printing
     path.append(start_state)
-    while path:
+    while path and not found:
         check_state = path.pop(0)   # get the first element in list : using list as Queue
 
         # to make sure we do not
@@ -167,7 +167,7 @@ def dfs(start_state, goal_state):
     path = []
     visited = grid.copy()
     path.append(start_state)
-    while len(path) > 0:
+    while len(path) > 0 and not found:
         check_state = path.pop()  # using list as a stack
         state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
         if check_state == goal_state:
@@ -191,7 +191,7 @@ def dfs_level(start_state, goal_state, total_levels, max_level):
     path = []
     visited = grid.copy()
     path.append(start_state)
-    while len(path) > 0:
+    while len(path) > 0 and not found:
         check_state = path.pop()  # using list as a stack
         state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
         if check_state == goal_state:
@@ -228,7 +228,7 @@ def main():
 
     global grid
 
-    start_state, goal_state = file_input('test1')
+    start_state, goal_state = file_input('test10')
     print(start_state)
     print(goal_state)
 
@@ -237,12 +237,12 @@ def main():
 
     if not bfs(start_state, goal_state):
         print("No path found")
-    initialize_state_grid()
-    # if not dfs(start_state, goal_state):
-    #    print("No path found")
-    # print(grid)
-    # if not iterativedeepening(start_state, goal_state):
-    #     print("No path found")
+    #initialize_state_grid()
+    #if not dfs(start_state, goal_state):
+     #   print("No path found")
+    #initialize_state_grid()
+    #if not iterativedeepening(start_state, goal_state):
+     #    print("No path found")
 
 
 if __name__ == "__main__":
