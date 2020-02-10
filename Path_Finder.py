@@ -179,7 +179,7 @@ def dfs(start_state, goal_state):
     path = []
     visited = grid.copy()
     path.append(start_state)
-    while len(path) > 0:
+    while path and (not found):
         check_state = path.pop()  # using list as a stack
         state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
         if check_state == goal_state:
@@ -203,7 +203,7 @@ def dfs_level(start_state, goal_state, total_levels, max_level):
     path = []
     visited = grid.copy()
     path.append(start_state)
-    while len(path) > 0:
+    while path and (not found):
         check_state = path.pop()  # using list as a stack
         state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
         if check_state == goal_state:
