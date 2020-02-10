@@ -1,6 +1,7 @@
 import numpy as np
 from dataclasses import dataclass
 import operator
+from draw import *
 
 
 @dataclass
@@ -112,23 +113,37 @@ def print_path(start_state, goal_state):
     global state_grid
     global min_cost
     min_cost = goal_state.cost if goal_state.cost < min_cost else min_cost
+    path_grid = []
+    path_row = ""
+
 
     path = generate_path(start_state, goal_state)
     print(state_grid[goal_state.Current[0]][goal_state.Current[1]])
     print("The cost of this path is {}".format(goal_state.cost))
     for i in range(dimensions[0] - 1, -1, -1):
+        path_row = ""
         for j in range(dimensions[1]):
             if State([], [i, j], 0, 0) == start_state:
                 print('S', end=" ")
+                path_row += 'S'
             elif State([], [i, j], 0, 0) == goal_state:
                 print('G', end=" ")
+                path_row += 'G'
             elif State([], [i, j], 0, 0) in path:
                 print('*', end=" ")
+                path_row += '*'
             else:
                 print(grid[i][j], end=" ")
+                path_row += str(grid[i][j])
+        path_grid.append(path_row)
         print(" ")
 
     print("", end="\n \n \n")
+    draw_path(path_grid)
+    a = 2
+
+
+
 
 
 # Breadth first Blind search
@@ -234,14 +249,14 @@ def main():
     # to run a specific search uncomment it and fun the file
 
 
-    if not bfs(start_state, goal_state):
-        print("No path found")
+    # if not bfs(start_state, goal_state):
+    #     print("No path found")
     initialize_state_grid()
     # if not dfs(start_state, goal_state):
     #    print("No path found")
     # print(grid)
-    # if not iterativedeepening(start_state, goal_state):
-    #     print("No path found")
+    if not iterativedeepening(start_state, goal_state):
+        print("No path found")
 
 
 if __name__ == "__main__":
