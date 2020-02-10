@@ -1,6 +1,7 @@
 import numpy as np
 from dataclasses import dataclass
 import operator
+from draw import *
 
 
 @dataclass
@@ -106,29 +107,40 @@ def generate_path(start_state, goal_state):
 
     return path
 
+
 # print the path on console
-def print_path(start_state, goal_state):
+def print_path(start_state, goal_state, name):
     global grid
     global state_grid
     global min_cost
     min_cost = goal_state.cost if goal_state.cost < min_cost else min_cost
+    path_grid = []
+    path_row = ""
 
     path = generate_path(start_state, goal_state)
     print(state_grid[goal_state.Current[0]][goal_state.Current[1]])
     print("The cost of this path is {}".format(goal_state.cost))
     for i in range(dimensions[0] - 1, -1, -1):
+        path_row = ""
         for j in range(dimensions[1]):
             if State([], [i, j], 0, 0) == start_state:
                 print('S', end=" ")
+                path_row += 'S'
             elif State([], [i, j], 0, 0) == goal_state:
                 print('G', end=" ")
+                path_row += 'G'
             elif State([], [i, j], 0, 0) in path:
                 print('*', end=" ")
+                path_row += '*'
             else:
                 print(grid[i][j], end=" ")
+                path_row += str(grid[i][j])
+        path_grid.append(path_row)
         print(" ")
 
     print("", end="\n \n \n")
+    draw_path(path_grid,name ,goal_state.cost)
+    a = 2
 
 
 # Breadth first Blind search
@@ -137,10 +149,10 @@ def bfs(start_state, goal_state):
     global state_grid
     found = False
     path = []
-    visited = grid.copy() # don't want to modify the ordinal grid because it will be used in printing
+    visited = grid.copy()  # don't want to modify the ordinal grid because it will be used in printing
     path.append(start_state)
-    while path and not found:
-        check_state = path.pop(0)   # get the first element in list : using list as Queue
+    while path and (not found):
+        check_state = path.pop(0)  # get the first element in list : using list as Queue
 
         # to make sure we do not
         # overwrite current path
@@ -149,10 +161,10 @@ def bfs(start_state, goal_state):
 
         if check_state == goal_state:
             found = True
-            print_path(start_state, check_state)
-        visited[check_state.Current[0]][check_state.Current[1]] += 2 # adding 2 to view visiting structure
-        for state in successors(check_state):   # for all of its successors
-            if visited[state.Current[0]][state.Current[1]] < 1: # if not visited and not a obstacle
+            print_path(start_state, check_state, "BFS")
+        visited[check_state.Current[0]][check_state.Current[1]] += 2  # adding 2 to view visiting structure
+        for state in successors(check_state):  # for all of its successors
+            if visited[state.Current[0]][state.Current[1]] < 1:  # if not visited and not a obstacle
                 path.append(state)
 
     return found
@@ -167,13 +179,13 @@ def dfs(start_state, goal_state):
     path = []
     visited = grid.copy()
     path.append(start_state)
-    while len(path) > 0 and not found:
+    while path and (not found):
         check_state = path.pop()  # using list as a stack
         state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
         if check_state == goal_state:
             found = True
             print(state_grid)
-            print_path(start_state, check_state)
+            print_path(start_state, check_state, "DFS")
             visited[check_state.Current[0]][check_state.Current[1]] -= 2
         visited[check_state.Current[0]][check_state.Current[1]] += 2
         for state in successors(check_state):
@@ -191,13 +203,13 @@ def dfs_level(start_state, goal_state, total_levels, max_level):
     path = []
     visited = grid.copy()
     path.append(start_state)
-    while len(path) > 0 and not found:
+    while path and (not found):
         check_state = path.pop()  # using list as a stack
         state_grid[check_state.Current[0]][check_state.Current[1]] = check_state
         if check_state == goal_state:
             found = True
             print(state_grid)
-            print_path(start_state, check_state)
+            print_path(start_state, check_state, "IDFS")
         visited[check_state.Current[0]][check_state.Current[1]] = 2
         for state in successors(check_state):
             if visited[state.Current[0]][state.Current[1]] < 1 and state.depth <= total_levels:  # if depth is in range
@@ -222,27 +234,25 @@ def iterativedeepening(start_state, goal_state):
         print("total level", total_level)  # just for the sake of showing that all levels are traversed
     return False
 
-#new branch for testing
+
 def main():
     global dimensions
-
     global grid
 
-    start_state, goal_state = file_input('test6')
+    start_state, goal_state = file_input('grid.txt')
     print(start_state)
     print(goal_state)
 
     # to run a specific search uncomment it and fun the file
 
-
-    if not bfs(start_state, goal_state):
-        print("No path found")
+    # if not bfs(start_state, goal_state):
+    #     print("No path found")
     initialize_state_grid()
     if not dfs(start_state, goal_state):
-        print("No path found")
-    initialize_state_grid()
-    if not iterativedeepening(start_state, goal_state):
-         print("No path found")
+       print("No path found")
+    # print(grid)
+    # if not iterativedeepening(start_state, goal_state):
+    #     print("No path found")
 
 
 if __name__ == "__main__":
