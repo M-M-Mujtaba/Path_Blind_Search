@@ -7,13 +7,14 @@ from graphics import *
 #     path = generate_path(start_state, goal_state)
 
 
-def draw_path(grid):
+def draw_path(grid, algo_name, cost ):
 
 
-    win = GraphWin("Path Finder", 700, 700)
+    win = GraphWin(algo_name, 700, 700)
     block_size = 35
     start_x = 200
     start_y = 100
+    Message = Text(Point(500, 75), "The cost for this path is {}".format(cost))
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -27,7 +28,7 @@ def draw_path(grid):
             elif grid[i][j] == '*':
                 block.setFill("green")
             block.draw(win)
-
+    Message.draw(win)
 
 
 

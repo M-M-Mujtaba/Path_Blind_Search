@@ -107,15 +107,15 @@ def generate_path(start_state, goal_state):
 
     return path
 
+
 # print the path on console
-def print_path(start_state, goal_state):
+def print_path(start_state, goal_state, name):
     global grid
     global state_grid
     global min_cost
     min_cost = goal_state.cost if goal_state.cost < min_cost else min_cost
     path_grid = []
     path_row = ""
-
 
     path = generate_path(start_state, goal_state)
     print(state_grid[goal_state.Current[0]][goal_state.Current[1]])
@@ -139,11 +139,8 @@ def print_path(start_state, goal_state):
         print(" ")
 
     print("", end="\n \n \n")
-    draw_path(path_grid)
+    draw_path(path_grid,name ,goal_state.cost)
     a = 2
-
-
-
 
 
 # Breadth first Blind search
@@ -152,10 +149,10 @@ def bfs(start_state, goal_state):
     global state_grid
     found = False
     path = []
-    visited = grid.copy() # don't want to modify the ordinal grid because it will be used in printing
+    visited = grid.copy()  # don't want to modify the ordinal grid because it will be used in printing
     path.append(start_state)
-    while path:
-        check_state = path.pop(0)   # get the first element in list : using list as Queue
+    while path and (not found):
+        check_state = path.pop(0)  # get the first element in list : using list as Queue
 
         # to make sure we do not
         # overwrite current path
@@ -164,10 +161,10 @@ def bfs(start_state, goal_state):
 
         if check_state == goal_state:
             found = True
-            print_path(start_state, check_state)
-        visited[check_state.Current[0]][check_state.Current[1]] += 2 # adding 2 to view visiting structure
-        for state in successors(check_state):   # for all of its successors
-            if visited[state.Current[0]][state.Current[1]] < 1: # if not visited and not a obstacle
+            print_path(start_state, check_state, "BFS")
+        visited[check_state.Current[0]][check_state.Current[1]] += 2  # adding 2 to view visiting structure
+        for state in successors(check_state):  # for all of its successors
+            if visited[state.Current[0]][state.Current[1]] < 1:  # if not visited and not a obstacle
                 path.append(state)
 
     return found
@@ -188,7 +185,7 @@ def dfs(start_state, goal_state):
         if check_state == goal_state:
             found = True
             print(state_grid)
-            print_path(start_state, check_state)
+            print_path(start_state, check_state, "DFS")
             visited[check_state.Current[0]][check_state.Current[1]] -= 2
         visited[check_state.Current[0]][check_state.Current[1]] += 2
         for state in successors(check_state):
@@ -212,7 +209,7 @@ def dfs_level(start_state, goal_state, total_levels, max_level):
         if check_state == goal_state:
             found = True
             print(state_grid)
-            print_path(start_state, check_state)
+            print_path(start_state, check_state, "IDFS")
         visited[check_state.Current[0]][check_state.Current[1]] = 2
         for state in successors(check_state):
             if visited[state.Current[0]][state.Current[1]] < 1 and state.depth <= total_levels:  # if depth is in range
@@ -248,15 +245,14 @@ def main():
 
     # to run a specific search uncomment it and fun the file
 
-
     # if not bfs(start_state, goal_state):
     #     print("No path found")
     initialize_state_grid()
-    # if not dfs(start_state, goal_state):
-    #    print("No path found")
+    if not dfs(start_state, goal_state):
+       print("No path found")
     # print(grid)
-    if not iterativedeepening(start_state, goal_state):
-        print("No path found")
+    # if not iterativedeepening(start_state, goal_state):
+    #     print("No path found")
 
 
 if __name__ == "__main__":
