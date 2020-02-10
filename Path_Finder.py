@@ -222,9 +222,10 @@ def iterativedeepening(start_state, goal_state):
         print("total level", total_level)  # just for the sake of showing that all levels are traversed
     return False
 
-
+#new branch for testing
 def main():
     global dimensions
+
     global grid
 
     start_state, goal_state = file_input('grid.txt')
