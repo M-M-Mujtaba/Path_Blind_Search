@@ -14,7 +14,8 @@ def draw_path(grid, algo_name, cost ):
     block_size = 35
     start_x = 200
     start_y = 100
-    Message = Text(Point(500, 75), "The cost for this path is {}".format(cost))
+    Help_message =Text(Point(300, 50), "1) Press on the screen to exit, do not press x")
+    Message = Text(Point(300, 75), "2) The cost for this path is {} \n3) The path is on the console".format(cost))
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -29,7 +30,8 @@ def draw_path(grid, algo_name, cost ):
                 block.setFill("green")
             block.draw(win)
     Message.draw(win)
-
+    Help_message.setFill("red")
+    Help_message.draw(win)
 
 
     win.getMouse()

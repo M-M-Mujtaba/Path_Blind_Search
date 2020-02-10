@@ -139,6 +139,11 @@ def print_path(start_state, goal_state, name):
         print(" ")
 
     print("", end="\n \n \n")
+    print("the path is: ");
+    while path:
+        a = path.pop()
+        print(a, end=" ")
+        print("->", end="")
     draw_path(path_grid,name ,goal_state.cost)
     a = 2
 
@@ -231,7 +236,7 @@ def iterativedeepening(start_state, goal_state):
         if max_level[0] < total_level:  # number of levels traversed are less than the total assigned levels
             return False
         total_level = total_level + 1
-        print("total level", total_level)  # just for the sake of showing that all levels are traversed
+        #print("total level", total_level)  # just for the sake of showing that all levels are traversed
     return False
 
 
@@ -245,14 +250,36 @@ def main():
 
     # to run a specific search uncomment it and fun the file
 
-    # if not bfs(start_state, goal_state):
-    #     print("No path found")
-    initialize_state_grid()
-    if not dfs(start_state, goal_state):
-       print("No path found")
-    # print(grid)
-    # if not iterativedeepening(start_state, goal_state):
-    #     print("No path found")
+    if dimensions[0]==0 and dimensions[1]==0:
+        print("Error. Empty Grid")
+    else:
+        print("The path will be printed on console and grid & cost is displayed in the window")
+        value = "1"
+        while value != "4":
+            print("Enter 1 for Bfs, 2 for DFS , 3 for Iterative Deepening search, 4 to Exit")
+            value = input("Enter your choice: ")
+            print(value)
+            if value == "1":
+                if not bfs(start_state, goal_state):
+                     print("No path found")
+                initialize_state_grid()
+                x = input(" Press Enter")
+
+            elif value == "2":
+                if not dfs(start_state, goal_state):
+                    print("No path found")
+            # print(grid)
+                initialize_state_grid()
+                x = input(" Press Enter")
+
+            elif value == "3":
+                if not iterativedeepening(start_state, goal_state):
+                    print("No path found")
+                initialize_state_grid()
+                x = input(" Press Enter")
+
+            else:
+                print("Not valid input")
 
 
 if __name__ == "__main__":
