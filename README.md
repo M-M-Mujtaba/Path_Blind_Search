@@ -1,5 +1,5 @@
 # Path_Blind_Search
-Using DFS , IDFS, BFS and two way BFS to navigate a maze
+Using DFS , IDFS and BFS to navigate a maze
 
 For all three algorithms we have used iterative approach and the 
 Information about path is stored in a state_grid , which is same dimensions as the input grid.
